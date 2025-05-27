@@ -35,7 +35,7 @@ class Puntaje implements Comparable{
     }
 }
 
-char[] letrasIngresadas = new char[6]; // Letras ingresadas por el usuario
+char[] letrasIngresadas = new char[18]; // Letras ingresadas por el usuario
 boolean juegoIniciado = false; // Controla si el juego ha comenzado
 
 // Variables del juego (segundo código)
@@ -44,11 +44,11 @@ int tiempoRestante;
 int tiempoInicio;
 int penalizacionPistas = 0;
 boolean temporizadorActivo = false;
-char[] array = new char[6]; // Letras aleatorias
+char[] array = new char[18]; // Letras aleatorias
 Random r = new Random();
 boolean mostrarLetras = false; // Controla si se muestran las letras
 int tiempoInicioLetras = 0; // Empiezan a aparecer las letras al pulsar start
-boolean[] respuestasCorrectas = new boolean[6]; // Controla si la letra es correcta
+boolean[] respuestasCorrectas = new boolean[18]; // Controla si la letra es correcta
 
 ArrayList<Puntaje> ranking = new ArrayList<Puntaje>();
 boolean mostrarRanking = false;
@@ -96,7 +96,7 @@ void setup() {
       letrasIngresadas[i] = ' ';
     }
   } else {
-    background(30, 58, 138);
+      background(139, 166, 143);
     // Generar letras aleatorias
     resetPartida();
     // Inicia el temporizador
@@ -107,13 +107,12 @@ void setup() {
 void resetPartida(){
   for (int i = 0; i < array.length; i++) {
       array[i] = (char) (r.nextInt(26) + 97);
-      letrasIngresadas[i] = '_'; // Inicialmente vacíos
+      letrasIngresadas[i] = '?'; // Inicialmente vacíos
       respuestasCorrectas[i] = false;
       mostrarRanking = false;
     }
     resultado = false;
 }
-
 
 void draw() {
   if (!juegoIniciado) {
@@ -122,8 +121,10 @@ void draw() {
     Texto();
     TextoSombra();
   } else {
-    background(240, 255, 255); // Redibujar fondo para limpiar pantalla
-    dibujarLineas();
+    background(174, 198, 197); 
+    fill(202, 207, 208);
+    rect(1150, 0, 1500, 900);// Redibujar fondo para limpiar pantalla
+
     actualizarTemporizador(true);
     dibujarBoton();
     dibujarBoton2();
@@ -164,15 +165,21 @@ void draw() {
 
       // Mostrar ranking
       if (mostrarRanking) {
-        textSize(30);
+        textSize(40);
         fill(0);
-        textAlign(LEFT, TOP);
-        text("Ranking:", 1155, 10);
+        textAlign(CENTER, CENTER);
+        text("Ranking:", 1327, 20);
+        //sombra
+        textSize(40);
+        fill(190);
+        textAlign(CENTER, CENTER);
+        text("Ranking:", 1327, 22);
 
         for (int i = 0; i < ranking.size(); i++) {
           Puntaje p = ranking.get(i);
+          fill(0);
           String linea = (i + 1) + ". " + p.nombre + " - " + formatTime(p.tiempo);
-          text(linea, 1155, 40 + i * 30);  // Mostrar el nombre y el tiempo
+          text(linea, 1327, 65 + i * 30);  // Mostrar el nombre y el tiempo
         }
       }
     }
@@ -191,11 +198,11 @@ void dibujarrectang2() {
 }
 
 void Texto() {
-  fill(190);
+  fill(0);
   textSize(35);
-  text("ingresa tu usuario:", 800, 370, 50);
-  textSize(110);
-  text("→", 1215, 480, 100);
+  text("Ingrese su nombre de usuario:", 800, 370, 50);
+  textSize(130);
+  text("→", 1210, 480, 100);
   fill(255);
   textSize(150);
   text("SpeeD", 155,350,20);
@@ -211,10 +218,10 @@ void Texto() {
 void TextoSombra() {
   fill(190);
   textSize(35);
-  text("ingresa tu usuario:", 800, 370, 50);
-  textSize(110);
-  text("→", 1215, 480, 100);
-  fill(200);
+  text("ingrese su nombre de usuario:", 800, 371, 50);
+  textSize(130);
+  text("→", 1212, 478, 98);
+  fill(80);
   textSize(150);
   text("SpeeD", 157,352,20);
   textSize(150);
@@ -245,18 +252,19 @@ void keyPressed() {
   }
   }
   } else {    
+  if (tiempoRestante <= 0) return;  // No permitir escribir si se acabó el tiempo
   if (mostrarLetras) return;  // Impedir escribir mientras se muestran las letras (3 segundos iniciales)
   if (key == BACKSPACE) {
   // Eliminar la última letra incorrecta
   for (int i = letrasIngresadas.length - 1; i >= 0; i--) {
-    if (letrasIngresadas[i] != '_' && !respuestasCorrectas[i]) {
-      letrasIngresadas[i] = '_'; // Vacía el cuadro
+    if (letrasIngresadas[i] != '?' && !respuestasCorrectas[i]) {
+      letrasIngresadas[i] = '?'; // Vacía el cuadro
       break; // Borra solo una letra incorrecta
     }
   }
   } else if (key >= 'a' && key <= 'z') {
   for (int i = 0; i < letrasIngresadas.length; i++) {
-    if (letrasIngresadas[i] == '_') { // Encuentra el primer espacio vacío
+    if (letrasIngresadas[i] == '?') { // Encuentra el primer espacio vacío
       letrasIngresadas[i] = key;
       respuestasCorrectas[i] = (letrasIngresadas[i] == array[i]); // Compara con la original
       break; // Solo escribe en un cuadro a la vez
@@ -306,13 +314,6 @@ void mousePressed() {
 
 }
 
-// Dibujar líneas separadoras
-void dibujarLineas() {
-  stroke(0);
-  line(1150, 0, 1150, 900); // Línea vertical
-  line(1150, 300, 0, 300);  // Línea horizontal
-}
-
 // Dibujar cuadros y letras
 void dibujarCuadros() {
   int tamano = 100;
@@ -325,7 +326,7 @@ void dibujarCuadros() {
   textSize(40);
   textAlign(CENTER, CENTER);
 
-  for (int j = 0; j <1; j++) {
+  for (int j = 0; j < 3; j++) {
   for (int i = 0; i < cantidadCubos; i++) {
     float x = startX + i * (tamano + espacio);
     float y = startY + j * (tamano + espacio);
@@ -360,10 +361,11 @@ void actualizarTemporizador(boolean draw) {
   tiempoRestante = tiempoInicial - tiempoTranscurrido;
   }
 
-  fill(255, 245, 238);
+   //fondo temporizador
+  fill(101, 98, 135);
   rect(0, 0, 1150, 350);
-
-  fill(255, 138, 92);
+  //color temporizador
+  fill(187, 187, 187);
   textSize(350);
   textAlign(CENTER, CENTER);
 
