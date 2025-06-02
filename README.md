@@ -124,7 +124,3 @@ La estructura principal del repositorio es la siguiente:
 ## Licencia
 
 Este proyecto está bajo una licencia abierta. Consulta el repositorio para más detalles o añade tu propia licencia según tus necesidades.
-
----
-
-Si necesitas personalizar el README o tienes dudas sobre alguna parte del sistema, házmelo saber y haré los cambios que necesites.
